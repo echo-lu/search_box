@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>search</title>
+	<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+	<style>
+		body {
+			background-color: #333;
+		}
+		.bg-div {
+			position: relative;
+			background-image: url(river.jpg);
+			width:1228px;
+			height: 690px;
+			margin:0 auto;
+		}
+		.logo {
+			margin:-4px 18px 0 0;
+			background-image: url(logo.png);
+			width: 107px;
+			height:53px;
+			float:left;
+		}
+		form {
+			float: left;
+			background-color: #fff;
+			padding: 5px;
+		}
+		.search-input-txt {
+			border:0;
+			float: left;
+			height:25px;
+			line-height: 25px;
+			outline:none;
+			padding-left: 4px;
+			width:350px;
+		}
+		.search-input-btn {
+			float: left;
+			border: 0;
+			background-image: url(search-button.png);
+			width: 29px;
+			height:29px;
+			cursor: pointer;
+		}
+		.search-box {
+			position: absolute;
+			top:150px;
+			left:200px;
+		}
+		.suggest {
+			position:absolute;
+			width:390px;
+			background-color: #fff;
+			border:1px solid #999;
+		}
+		.suggest ul {
+			list-style: none;
+			margin:0;
+			padding: 0;
+		}
+		.suggest ul li {
+			padding: 3px;
+			font-size: 14px;
+			line-height: 25px;
+			cursor: pointer;
+		}
+		.suggest ul li:hover {
+			text-decoration: underline;
+			background-color: #e5e5e5;
+		}
+	</style>
+</head>
+<body>
+	<div class="bg-div">
+		<div class="search-box">
+			<div class="logo"></div>
+			<form id="search-form">
+				<input type="text" class="search-input-txt" id="search_input">
+				<input type="submit" class = "search-input-btn" value="" >
+			</form>
+		</div>
+	</div>
+	<div class="suggest" id="search-suggest" style="display: none;">
+		<ul id="search-res">
+			<li>search1</li>
+			<li>search2</li>
+		</ul>
+	</div>	
+
+	<script type="text/javascript">
+		$('#search_input').bind('keyup',function() {
+			var searchTxt = $('#search_input').val();
+			$.get('http://api.bing.com/qsonhs.aspx?q='+searchTxt,function(d){
+				var d = d.AS.Results[0].Suggests;
+				var html = '';
+				for(var i=0;i<d.length;i++) {
+					html += '<li>' + d[i].Txt + '</li>';
+				}
+				$('#search-res').html(html);
+				$('#search-suggest').show().css({
+				top:$('#search-form').offset().top+$('#search-form').height()+10,
+				left:$('#search-form').offset().left
+				
+			});
+			},'json');
+			
+		})
+	</script>
+</body>
+</html>
